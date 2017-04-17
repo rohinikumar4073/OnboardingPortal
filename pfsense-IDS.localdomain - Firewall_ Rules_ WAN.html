@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<!-- saved from url=(0044)https://10.1.44.93/firewall_rules.php?if=wan -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/pfSense.css">
+	<link rel="stylesheet" href="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/font-awesome.min.css">
+	<link rel="stylesheet" href="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/sortable-theme-bootstrap.css">
+	<title>pfsense-IDS.localdomain - Firewall: Rules: WAN</title>
+	<script type="text/javascript">
+	//<![CDATA[
+	var events = events || [];
+	//]]>
+	</script>
+<script type="text/javascript">if (top != self) {top.location.href = self.location.href;}</script><script type="text/javascript">var csrfMagicToken = "sid:223e8c6fa4b2e154cfa1ffe0ef039a33c2187817,1488795411";var csrfMagicName = "__csrf_magic";</script><script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/csrf-magic.js.download" type="text/javascript"></script></head>
+
+<body id="2">
+<nav id="topmenu" class="navbar navbar-static-top navbar-inverse">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#pf-navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="https://10.1.44.93/"><img src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/logo.png" alt="pfSense" title="pfsense-IDS.localdomain"></a>
+		</div>
+		<div class="collapse navbar-collapse" id="pf-navbar">
+			<ul class="nav navbar-nav">
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						System						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/system_advanced_admin.php" class="navlnk">Advanced</a></li>
+<li><a href="https://10.1.44.93/system_camanager.php" class="navlnk">Cert. Manager</a></li>
+<li><a href="https://10.1.44.93/system.php" class="navlnk">General Setup</a></li>
+<li><a href="https://10.1.44.93/system_hasync.php" class="navlnk">High Avail. Sync</a></li>
+<li><a href="https://10.1.44.93/index.php?logout" class="navlnk">Logout</a></li>
+<li><a href="https://10.1.44.93/pkg_mgr_installed.php" class="navlnk">Package Manager</a></li>
+<li><a href="https://10.1.44.93/system_gateways.php" class="navlnk">Routing</a></li>
+<li><a href="https://10.1.44.93/wizard.php?xml=setup_wizard.xml" class="navlnk">Setup Wizard</a></li>
+<li><a href="https://10.1.44.93/pkg_mgr_install.php?id=firmware" class="navlnk">Update</a></li>
+<li><a href="https://10.1.44.93/system_usermanager.php" class="navlnk">User Manager</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Interfaces						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/interfaces_assign.php" class="navlnk">(assign)</a></li>
+<li><a href="https://10.1.44.93/interfaces.php?if=lan" class="navlnk">LAN</a></li>
+<li><a href="https://10.1.44.93/interfaces.php?if=opt1" class="navlnk">OPT1</a></li>
+<li><a href="https://10.1.44.93/interfaces.php?if=wan" class="navlnk">WAN</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Firewall						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/firewall_aliases.php" class="navlnk">Aliases</a></li>
+<li><a href="https://10.1.44.93/firewall_nat.php" class="navlnk">NAT</a></li>
+<li><a href="https://10.1.44.93/pkg_edit.php?xml=pfblockerng.xml" class="navlnk">pfBlockerNG</a></li>
+<li><a href="https://10.1.44.93/firewall_rules.php" class="navlnk">Rules</a></li>
+<li><a href="https://10.1.44.93/firewall_schedule.php" class="navlnk">Schedules</a></li>
+<li><a href="https://10.1.44.93/firewall_shaper.php" class="navlnk">Traffic Shaper</a></li>
+<li><a href="https://10.1.44.93/firewall_virtual_ip.php" class="navlnk">Virtual IPs</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Services						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/services_captiveportal.php" class="navlnk">Captive Portal</a></li>
+<li><a href="https://10.1.44.93/services_dhcp_relay.php" class="navlnk">DHCP Relay</a></li>
+<li><a href="https://10.1.44.93/services_dhcp.php" class="navlnk">DHCP Server</a></li>
+<li><a href="https://10.1.44.93/services_dhcpv6_relay.php" class="navlnk">DHCPv6 Relay</a></li>
+<li><a href="https://10.1.44.93/services_dhcpv6.php" class="navlnk">DHCPv6 Server &amp; RA</a></li>
+<li><a href="https://10.1.44.93/services_dnsmasq.php" class="navlnk">DNS Forwarder</a></li>
+<li><a href="https://10.1.44.93/services_unbound.php" class="navlnk">DNS Resolver</a></li>
+<li><a href="https://10.1.44.93/services_dyndns.php" class="navlnk">Dynamic DNS</a></li>
+<li><a href="https://10.1.44.93/services_igmpproxy.php" class="navlnk">IGMP Proxy</a></li>
+<li><a href="https://10.1.44.93/load_balancer_pool.php" class="navlnk">Load Balancer</a></li>
+<li><a href="https://10.1.44.93/services_ntpd.php" class="navlnk">NTP</a></li>
+<li><a href="https://10.1.44.93/services_pppoe.php" class="navlnk">PPPoE Server</a></li>
+<li><a href="https://10.1.44.93/services_snmp.php" class="navlnk">SNMP</a></li>
+<li><a href="https://10.1.44.93/snort/snort_interfaces.php" class="navlnk">Snort</a></li>
+<li><a href="https://10.1.44.93/pkg_edit.php?xml=squidguard.xml&amp;id=0" class="navlnk">SquidGuard Proxy Filter</a></li>
+<li><a href="https://10.1.44.93/pkg_edit.php?xml=miniupnpd.xml" class="navlnk">UPnP &amp; NAT-PMP</a></li>
+<li><a href="https://10.1.44.93/services_wol.php" class="navlnk">Wake-on-LAN</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						VPN						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/vpn_ipsec.php" class="navlnk">IPsec</a></li>
+<li><a href="https://10.1.44.93/vpn_l2tp.php" class="navlnk">L2TP</a></li>
+<li><a href="https://10.1.44.93/vpn_openvpn_server.php" class="navlnk">OpenVPN</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Status						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/status_captiveportal.php" class="navlnk">Captive Portal</a></li>
+<li><a href="https://10.1.44.93/status_carp.php" class="navlnk">CARP (failover)</a></li>
+<li><a href="https://10.1.44.93/index.php" class="navlnk">Dashboard</a></li>
+<li><a href="https://10.1.44.93/status_dhcp_leases.php" class="navlnk">DHCP Leases</a></li>
+<li><a href="https://10.1.44.93/status_dhcpv6_leases.php" class="navlnk">DHCPv6 Leases</a></li>
+<li><a href="https://10.1.44.93/status_filter_reload.php" class="navlnk">Filter Reload</a></li>
+<li><a href="https://10.1.44.93/status_gateways.php" class="navlnk">Gateways</a></li>
+<li><a href="https://10.1.44.93/status_interfaces.php" class="navlnk">Interfaces</a></li>
+<li><a href="https://10.1.44.93/status_ipsec.php" class="navlnk">IPsec</a></li>
+<li><a href="https://10.1.44.93/status_lb_pool.php" class="navlnk">Load Balancer</a></li>
+<li><a href="https://10.1.44.93/status_monitoring.php" class="navlnk">Monitoring</a></li>
+<li><a href="https://10.1.44.93/status_ntpd.php" class="navlnk">NTP</a></li>
+<li><a href="https://10.1.44.93/status_openvpn.php" class="navlnk">OpenVPN</a></li>
+<li><a href="https://10.1.44.93/status_pkglogs.php" class="navlnk">Package Logs</a></li>
+<li><a href="https://10.1.44.93/status_queues.php" class="navlnk">Queues</a></li>
+<li><a href="https://10.1.44.93/status_services.php" class="navlnk">Services</a></li>
+<li><a href="https://10.1.44.93/status_logs.php" class="navlnk">System Logs</a></li>
+<li><a href="https://10.1.44.93/status_graph.php?if=wan" class="navlnk">Traffic Graph</a></li>
+<li><a href="https://10.1.44.93/status_upnp.php" class="navlnk">UPnP &amp; NAT-PMP</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Diagnostics						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/diag_arp.php" class="navlnk">ARP Table</a></li>
+<li><a href="https://10.1.44.93/diag_authentication.php" class="navlnk">Authentication</a></li>
+<li><a href="https://10.1.44.93/diag_backup.php" class="navlnk">Backup &amp; Restore</a></li>
+<li><a href="https://10.1.44.93/diag_command.php" class="navlnk">Command Prompt</a></li>
+<li><a href="https://10.1.44.93/diag_dns.php" class="navlnk">DNS Lookup</a></li>
+<li><a href="https://10.1.44.93/diag_edit.php" class="navlnk">Edit File</a></li>
+<li><a href="https://10.1.44.93/diag_defaults.php" class="navlnk">Factory Defaults</a></li>
+<li><a href="https://10.1.44.93/diag_halt.php" class="navlnk">Halt System</a></li>
+<li><a href="https://10.1.44.93/diag_limiter_info.php" class="navlnk">Limiter Info</a></li>
+<li><a href="https://10.1.44.93/diag_ndp.php" class="navlnk">NDP Table</a></li>
+<li><a href="https://10.1.44.93/diag_packet_capture.php" class="navlnk">Packet Capture</a></li>
+<li><a href="https://10.1.44.93/diag_pf_info.php" class="navlnk">pfInfo</a></li>
+<li><a href="https://10.1.44.93/diag_pftop.php" class="navlnk">pfTop</a></li>
+<li><a href="https://10.1.44.93/diag_ping.php" class="navlnk">Ping</a></li>
+<li><a href="https://10.1.44.93/diag_reboot.php" class="navlnk">Reboot</a></li>
+<li><a href="https://10.1.44.93/diag_routes.php" class="navlnk">Routes</a></li>
+<li><a href="https://10.1.44.93/diag_smart.php" class="navlnk">S.M.A.R.T. Status</a></li>
+<li><a href="https://10.1.44.93/diag_sockets.php" class="navlnk">Sockets</a></li>
+<li><a href="https://10.1.44.93/diag_dump_states.php" class="navlnk">States</a></li>
+<li><a href="https://10.1.44.93/diag_states_summary.php" class="navlnk">States Summary</a></li>
+<li><a href="https://10.1.44.93/diag_system_activity.php" class="navlnk">System Activity</a></li>
+<li><a href="https://10.1.44.93/diag_tables.php" class="navlnk">Tables</a></li>
+<li><a href="https://10.1.44.93/diag_testport.php" class="navlnk">Test Port</a></li>
+<li><a href="https://10.1.44.93/diag_traceroute.php" class="navlnk">Traceroute</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Gold						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://www.pfsense.org/gold" target="_blank" class="navlnk">pfSense Gold</a></li>
+</ul>
+				</li>
+							<li class="dropdown">
+					<a href="https://10.1.44.93/firewall_rules.php?if=wan#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+						Help						<span class="caret"></span>
+					</a>
+					<ul class="dropdown-menu" role="menu"><li><a href="https://10.1.44.93/help.php?page=firewall_rules.php" target="_blank" class="navlnk">About this Page</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=redmine" target="_blank" class="navlnk">Bug Database</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=devwiki" target="_blank" class="navlnk">Developers Wiki</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=doc" target="_blank" class="navlnk">Documentation</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=fbsdhandbook" target="_blank" class="navlnk">FreeBSD Handbook</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=portal" target="_blank" class="navlnk">Paid Support</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=book" target="_blank" class="navlnk">pfSense Book</a></li>
+<li><a href="https://www.pfsense.org/j.php?jumpto=forum" target="_blank" class="navlnk">User Forum</a></li>
+</ul>
+				</li>
+						</ul>
+			<ul class="nav navbar-nav navbar-right">
+									<li class="dropdown">
+						<a href="https://10.1.44.93/index.php?logout">
+							<i class="fa fa-sign-out" title="Log out"></i>
+						</a>
+					</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<div class="container static">
+	<header class="header">
+
+<ol class="breadcrumb"><li>Firewall</li><li>Rules</li><li>WAN</li></ol>		<ul class="context-links">
+
+	
+	
+	
+	
+	
+	
+<li><a href="https://10.1.44.93/firewall_rules.php" title="Related settings"><i class="fa fa-sliders"></i></a></li><li><a href="https://10.1.44.93/status_filter_reload.php" title="Related status"><i class="fa fa-bar-chart"></i></a></li><li><a href="https://10.1.44.93/status_logs_filter.php" title="Related log entries"><i class="fa fa-list-alt"></i></a></li>			<li>
+			<a href="https://10.1.44.93/help.php?page=firewall_rules.php" target="_blank" title="Help for items on this page">
+				<i class="fa fa-question-circle"></i>
+			</a>
+		</li>
+			</ul>
+	</header>
+<div class="alert alert-success clearfix" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><div class="pull-left">The settings have been applied. The firewall rules are now reloading in the background.<br><a href="https://10.1.44.93/status_filter_reload.php"> Monitor </a> the reload progress.</div></div><ul class="nav nav-pills"><li role="presentation"><a href="https://10.1.44.93/firewall_rules.php?if=FloatingRules">Floating</a></li><li role="presentation" class="active"><a href="https://10.1.44.93/firewall_rules.php?if=wan">WAN</a></li><li role="presentation"><a href="https://10.1.44.93/firewall_rules.php?if=lan">LAN</a></li><li role="presentation"><a href="https://10.1.44.93/firewall_rules.php?if=opt1">OPT1</a></li></ul><form method="post"><input type="hidden" name="__csrf_magic" value="sid:223e8c6fa4b2e154cfa1ffe0ef039a33c2187817,1488795411">
+	<div class="panel panel-default">
+		<div class="panel-heading"><h2 class="panel-title">Rules (Drag to Change Order)</h2></div>
+		<div id="mainarea" class="table-responsive panel-body">
+			<table id="ruletable" class="table table-hover table-striped table-condensed">
+				<thead>
+					<tr>
+						<th><!-- checkbox --></th>
+						<th><!-- status icons --></th>
+						<th>States</th>
+						<th>Protocol</th>
+						<th>Source</th>
+						<th>Port</th>
+						<th>Destination</th>
+						<th>Port</th>
+						<th>Gateway</th>
+						<th>Queue</th>
+						<th>Schedule</th>
+						<th>Description</th>
+						<th>Actions</th>
+					</tr>
+				</thead>
+
+			<tbody class="user-entries ui-sortable" style="display: table-row-group;"><tr id="fr0" onclick="fr_toggle(0)" ondblclick="document.location=&#39;firewall_rules_edit.php?id=0&#39;;" class="ui-sortable-handle">
+						<td>
+							<input type="checkbox" id="frc0" onclick="fr_toggle(0)" name="rule[]" value="0">
+						</td>
+
+							<td title="traffic is passed">
+							<a href="https://10.1.44.93/firewall_rules.php?if=wan&amp;act=toggle&amp;id=0">
+								<i class="fa fa-check text-success" title="click to toggle enabled/disabled status"></i>
+							</a>
+							</td>
+					<td><a href="https://10.1.44.93/diag_dump_states.php?ruleid=81" data-toggle="popover" data-trigger="hover focus" title="" data-content="evaluations: 64.095 K&lt;br&gt;packets: 33 &lt;br&gt;bytes: 3 KiB&lt;br&gt;states: 0 &lt;br&gt;state creations: 0 " data-html="true" data-original-title="States details">0/3 KiB</a><br></td>
+				<td>
+	IPv4 *						</td>
+						<td>
+															*													</td>
+						<td>
+															*													</td>
+						<td>
+															*													</td>
+						<td>
+															*													</td>
+						<td>
+															*													</td>
+						<td>
+							none						</td>
+						<td>
+														&nbsp;						</td>
+						<td>
+													</td>
+						<td class="action-icons">
+						<!-- disable -->
+							<a class="fa fa-anchor icon-pointer" id="Xmove_0" title="Move checked rules above this one. Shift+Click to move checked rules below."></a>
+							<a href="https://10.1.44.93/firewall_rules_edit.php?id=0" class="fa fa-pencil" title="Edit"></a>
+							<a href="https://10.1.44.93/firewall_rules_edit.php?dup=0" class="fa fa-clone" title="Copy"></a>
+							<a href="https://10.1.44.93/firewall_rules.php?act=toggle&amp;if=wan&amp;id=0" class="fa fa-ban" title="Disable"></a>
+							<a href="https://10.1.44.93/firewall_rules.php?act=del&amp;if=wan&amp;id=0" class="fa fa-trash" title="Delete this rule"></a>
+						</td>
+					</tr></tbody>
+			</table>
+		</div>
+	</div>
+
+
+	<nav class="action-buttons">
+		<a href="https://10.1.44.93/firewall_rules_edit.php?if=wan&amp;after=-1" role="button" class="btn btn-sm btn-success" title="Add rule to the top of the list">
+			<i class="fa fa-level-up icon-embed-btn"></i>
+			Add		</a>
+		<a href="https://10.1.44.93/firewall_rules_edit.php?if=wan" role="button" class="btn btn-sm btn-success" title="Add rule to the end of the list">
+			<i class="fa fa-level-down icon-embed-btn"></i>
+			Add		</a>
+		<button name="del_x" type="submit" class="btn btn-danger btn-sm" value="Delete selected rules" title="Delete selected rules">
+			<i class="fa fa-trash icon-embed-btn"></i>
+			Delete		</button>
+		<button type="submit" id="order-store" name="order-store" class="btn btn-sm btn-primary" value="store changes" disabled="" title="Save rule order">
+			<i class="fa fa-save icon-embed-btn"></i>
+			Save		</button>
+		<button type="button" id="addsep" name="addsep" class="btn btn-sm btn-warning" title="Add separator">
+			<i class="fa fa-plus icon-embed-btn"></i>
+			Separator		</button>
+	</nav>
+</form>
+
+<i class="fa fa-info-circle icon-pointer" style="color: #337AB7; font-size:20px; margin-left: 10px; margin-bottom: 10px;" id="showinfo0" title="More information"></i><div class="infoblock0" style="display: none;">
+	<div class="alert alert-info clearfix" role="alert"><div class="pull-left">
+		<dl class="dl-horizontal responsive">
+		<!-- Legend -->
+			<dt>Legend</dt>				<dd></dd>
+			<dt><i class="fa fa-check text-success"></i></dt>		<dd>Pass</dd>
+			<dt><i class="fa fa-filter"></i></dt>	<dd>Match</dd>
+			<dt><i class="fa fa-times text-danger"></i></dt>	<dd>Block</dd>
+			<dt><i class="fa fa-hand-stop-o text-warning"></i></dt>		<dd>Reject</dd>
+			<dt><i class="fa fa-tasks"></i></dt>	<dd> Log</dd>
+			<dt><i class="fa fa-cog"></i></dt>		<dd> Advanced filter</dd>
+			<dt><i class="fa fa-forward text-success"></i></dt><dd> "Quick" rule. Applied immediately on match.</dd>
+		</dl>
+
+Rules are evaluated on a first-match basis (i.e. the action of the first rule to match a packet will be executed). <br>This means that if block rules are used, it is important to pay attention to the rule order. Everything that isn't explicitly passed is blocked by default. <br><br>Click the anchor icon <i class="fa fa-anchor"></i> to move checked rules before the clicked row. Hold down the shift key and click to move the rules after the clicked row.	</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+
+//Need to create some variables here so that jquery/pfSenseHelpers.js can read them
+iface = "wan";
+cncltxt = 'Cancel';
+svtxt = 'Save';
+svbtnplaceholder = 'Enter a description, Save, then drag to final location.';
+configsection = "filter";
+
+events.push(function() {
+
+	// "Move to here" (anchor) action
+	$('[id^=Xmove_]').click(function (event) {
+
+		// Prevent click from toggling row
+		event.stopImmediatePropagation();
+
+		// Save the target rule position
+		var anchor_row = $(this).parents("tr:first");
+
+		if (event.shiftKey) {
+			$($('#ruletable > tbody  > tr').get().reverse()).each(function() {
+				ruleid = this.id.slice(2);
+
+				if (ruleid && !isNaN(ruleid)) {
+					if ($('#frc' + ruleid).prop('checked')) {
+						// Move the selected rows, un-select them and add highlight class
+						$(this).insertAfter(anchor_row);
+						fr_toggle(ruleid, "fr");
+						$('#fr' + ruleid).addClass("highlight");
+					}
+				}
+			});
+		} else {
+			$('#ruletable > tbody  > tr').each(function() {
+				ruleid = this.id.slice(2);
+
+				if (ruleid && !isNaN(ruleid)) {
+					if ($('#frc' + ruleid).prop('checked')) {
+						// Move the selected rows, un-select them and add highlight class
+						$(this).insertBefore(anchor_row);
+						fr_toggle(ruleid, "fr");
+						$('#fr' + ruleid).addClass("highlight");
+					}
+				}
+			});
+		}
+
+		// Temporarily set background color so user can more easily see the moved rules, then fade
+		$('.highlight').effect("highlight", {color: "#739b4b;"}, 4000);
+		$('#ruletable tr').removeClass("highlight");
+		$('#order-store').removeAttr('disabled');
+		reindex_rules($(anchor_row).parent('tbody'));
+		dirty = true;
+	}).mouseover(function(e) {
+		var ruleselected = false;
+
+		$(this).css("cursor", "default");
+
+		// Are any rules currently selected?
+		$('[id^=frc]').each(function () {
+			if ($(this).prop("checked")) {
+				ruleselected = true;
+			}
+		});
+
+		// If so, change the icon to show the insetion point
+		if (ruleselected) {
+			if (e.shiftKey) {
+				$(this).removeClass().addClass("fa fa-lg fa-arrow-down text-danger");
+			} else {
+				$(this).removeClass().addClass("fa fa-lg fa-arrow-up text-danger");
+			}
+		}
+	}).mouseout(function(e) {
+		$(this).removeClass().addClass("fa fa-anchor");
+	});
+
+	// Make rules sortable. Hiding the table before applying sortable, then showing it again is
+	// a work-around for very slow sorting on FireFox
+	$('table tbody.user-entries').hide();
+
+	$('table tbody.user-entries').sortable({
+		cursor: 'grabbing',
+		update: function(event, ui) {
+			$('#order-store').removeAttr('disabled');
+			reindex_rules(ui.item.parent('tbody'));
+			dirty = true;
+		}
+	});
+
+	$('table tbody.user-entries').show();
+
+	// Check all of the rule checkboxes so that their values are posted
+	$('#order-store').click(function () {
+		$('[id^=frc]').prop('checked', true);
+
+		// Save the separator bar configuration
+		save_separators();
+
+		// Suppress the "Do you really want to leave the page" message
+		saving = true;
+	});
+
+	// Provide a warning message if the user tries to change page before saving
+	$(window).bind('beforeunload', function(){
+		if ((!saving && dirty) || newSeperator) {
+			return ("One or more rules have been moved but have not yet been saved");
+		} else {
+			return undefined;
+		}
+	});
+
+	$(document).on('keyup keydown', function(e){
+		if (e.shiftKey) {
+			$('[id^=Xmove_]').attr("title", "Move checked rules below this one. Release shift to move checked rules above.");
+		} else {
+			$('[id^=Xmove_]').attr("title", "Move checked rules above this one. Shift+Click to move checked rules below.");
+		}
+	});
+});
+//]]>
+</script>
+
+	</div>
+	<footer class="footer">
+		<div class="container">
+			<p class="text-muted">
+				<a id="tpl" style="display: none;" href="https://10.1.44.93/firewall_rules.php?if=wan#" title="Top of page"><i class="fa fa-caret-square-o-up pull-left"></i></a>
+				<a target="_blank" href="https://www.pfsense.org/?gui=bootstrap">pfSense</a> is ©
+				2004 - 2017 by <a href="https://pfsense.org/license" class="tblnk">Electric Sheep Fencing LLC</a>. All Rights Reserved.
+				[<a href="https://10.1.44.93/license.php" class="tblnk">view license</a>]
+				<a id="tpr" style="display: none;" href="https://10.1.44.93/firewall_rules.php?if=wan#" title="Top of page"><i class="fa fa-caret-square-o-up pull-right"></i></a>
+			</p>
+		</div>
+	</footer>
+
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/jquery-1.12.0.min.js.download"></script>
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/jquery-ui-1.11.4.min.js.download"></script>
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/bootstrap.min.js.download"></script>
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/pfSense.js.download"></script>
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/pfSenseHelpers.js.download"></script>
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/polyfills.js.download"></script>
+	<script src="./pfsense-IDS.localdomain - Firewall_ Rules_ WAN_files/sortable.js.download"></script>
+
+	<script type="text/javascript">
+	//<![CDATA[
+		// Un-hide the "Top of page" icons if the page is larger than the window
+		if ($(document).height() > $(window).height()) {
+		    $('[id^=tp]').show();
+		}
+	//]]>
+	</script>
+<script type="text/javascript">CsrfMagic.end();</script>
+
+</body></html>

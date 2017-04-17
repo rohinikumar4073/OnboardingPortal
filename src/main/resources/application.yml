@@ -1,0 +1,42 @@
+
+spring:
+ profiles.active: local
+app.name: vnf
+---
+spring:
+ profiles: local
+rms.datasource:
+  redisHostName: localhost
+  redisPortNo: 6379 
+  redisPassword:
+rms.serverapi:
+ ipaddress: http://10.200.0.229
+ port: 8090
+server:
+ port: 40512
+ 
+---
+spring:
+ profiles: uat
+rms.datasource:
+  redisHostName: local
+  redisPortNo: 6379 
+  redisPassword:
+rms.serverapi:
+ ipaddress: http://10.200.0.229
+ port: 8090
+server:
+ port: 50512
+
+---
+spring:
+ profiles: production
+rms.datasource:
+  redisHostName: local
+  redisPortNo: 6379 
+  redisPassword:
+rms.serverapi:
+ ipaddress: http://10.200.0.229
+ port: 8090
+server:
+ port: 50512
