@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.verizon.vnf.model.FormData;
 import com.verizon.vnf.model.PopulateNsd;
 import com.verizon.vnf.model.Vnfd;
+import com.verizon.vnf.model.WorkFlowView;
+import com.verizon.vnf.model.WorkFlowViewObject;
 import com.verizon.vnf.repository.RepositoryImplClass;
 import com.verizon.vnf.util.Util;
 
@@ -33,6 +35,7 @@ import io.swagger.annotations.ApiResponses;
 public class VNFController {
 	
 	private static final String VNF = "VNF";
+	private static final String WORKFLOW = "WORKFLOW";
 	@Autowired
 	RepositoryImplClass repositoryImplClass;
 	
@@ -245,6 +248,106 @@ public class VNFController {
 		return message;
 		
 	}
+	
+
+	//initialize
+	@RequestMapping(value = "{id}/initialize", method = RequestMethod.PUT, produces = "application/json")	
+	@ApiOperation(value = "This API used to provide the vnf initialize", notes = "Returns success or failure SLA:500")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Successful get all the data"),
+			@ApiResponse(code = 400, message = "Invalid input provided"),
+			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
+	public Map<String,String> initialize(@PathVariable String id){
+		//public Map<String,String> initialize(@PathVariable String id){
+	
+		WorkFlowView workFlowView = new WorkFlowView();
+		WorkFlowViewObject workFlowViewObject = new WorkFlowViewObject();
+		workFlowViewObject.setStatus("not-started");
+		
+		workFlowView.setUpload(workFlowViewObject);
+		workFlowView.setPackage_validation(workFlowViewObject);
+		workFlowView.setSecurity(workFlowViewObject);
+		workFlowView.setInstantiation(workFlowViewObject);
+		workFlowView.setTest_updates(workFlowViewObject);
+		workFlowView.setCertification(workFlowViewObject);
+		workFlowView.setArtifactory_version_update(workFlowViewObject);
+	
+		Map<String,String> message = new HashMap<String,String>();
+		//repositoryImplClass.save(id,workFlowView);
+		repositoryImplClass.save(WORKFLOW, id,workFlowView);
+		message.put("type", "sucess");
+		message.put("message", "Data save sucessfully!");
+		return message;
+	}
+
+	
+	//update date
+	//@RequestMapping(value = "{id}/update", method = RequestMethod.POST, produces = "application/json")	
+	@RequestMapping(value = "{id}/{name}/{status}/update", method = RequestMethod.POST, produces = "application/json")
+	@ApiOperation(value = "This API used to provide the vnf update", notes = "Returns success or failure SLA:500")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Successful get all the data"),
+			@ApiResponse(code = 400, message = "Invalid input provided"),
+			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
+
+		public Map<String,String> update(@PathVariable String id,@PathVariable String name,@PathVariable String status){
+		
+		WorkFlowView workFlowView = new WorkFlowView();
+		WorkFlowViewObject workFlowViewObject = new WorkFlowViewObject();
+		workFlowViewObject.setStatus(status);
+		Map<String,String> message = new HashMap<String,String>();
+		workFlowView=retriveID(id);
+		
+	
+			 switch (name) {
+	         case "upload":
+	        	 workFlowView.setUpload(workFlowViewObject);
+	             break;
+	         case "package_validation":
+	        	 workFlowView.setPackage_validation(workFlowViewObject);
+	             break;
+	         case "security":
+	        	 workFlowView.setSecurity(workFlowViewObject);
+	             break;
+	         case "instantiation":
+	        	 workFlowView.setInstantiation(workFlowViewObject);
+	             break;
+	         case "test_updates":
+	        	 workFlowView.setTest_updates(workFlowViewObject);
+	             break;
+	         case "certification":
+	        	 workFlowView.setCertification(workFlowViewObject);
+	             break;
+	         case "artifactory_version_update":
+	        	 workFlowView.setArtifactory_version_update(workFlowViewObject);
+	             break;
+		     }
+		repositoryImplClass.save(WORKFLOW, id, workFlowView);
+		message.put("type", "sucess");
+		message.put("message", "Data Updated sucessfully!");
+		return message;
+		
+	}
+	
+	//retrieve date
+	@RequestMapping(value = "{id}/retrieve", method = RequestMethod.GET, produces = "application/json")	
+	@ApiOperation(value = "This API used to provide the vnf retrive", notes = "Returns success or failure SLA:500")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Successful get all the data"),
+			@ApiResponse(code = 400, message = "Invalid input provided"),
+			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
+	public Object retrieve(@PathVariable String id){		
+		System.out.println("Id: "+id);
+		Object object = repositoryImplClass.get(WORKFLOW, id);		
+		return object;	
+	}	
+	public WorkFlowView retriveID(String id){
+		System.out.println("Id: "+id);
+		WorkFlowView object = (WorkFlowView) repositoryImplClass.get(WORKFLOW, id);		
+		return object;	
+	}
+	
+	
 	
 }
 		

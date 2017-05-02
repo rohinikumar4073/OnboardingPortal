@@ -38,6 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 
+
+
 @Service
 public class Util {
 	
@@ -218,7 +220,7 @@ public class Util {
 			Iterator<JSONObject> obj = ar.iterator();
 			while(obj.hasNext()){
 				JSONObject tempObj = obj.next();
-				if(tempObj.get("name").toString().equals("DNS-Info-Blox")){
+				if(tempObj.get("name").toString().equals("DNS-Info-Blox")){															
 					System.out.println(tempObj.get("name"));
 					vnfPackageId = tempObj.get("id").toString();
 				}
@@ -566,6 +568,8 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 
 }
