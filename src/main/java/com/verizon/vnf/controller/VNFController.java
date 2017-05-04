@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.verizon.vnf.model.FormData;
 import com.verizon.vnf.model.PopulateNsd;
+import com.verizon.vnf.model.ValidationStatusBody;
 import com.verizon.vnf.model.Vnfd;
 import com.verizon.vnf.model.WorkFlowView;
 import com.verizon.vnf.model.WorkFlowViewObject;
@@ -14,6 +15,7 @@ import com.verizon.vnf.util.Util;
 
 import io.swagger.annotations.ApiOperation;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -32,6 +34,7 @@ import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/vnf")
+//@RequestMapping("/vnfOnb")
 public class VNFController {
 	
 	private static final String VNF = "VNF";
@@ -283,23 +286,23 @@ public class VNFController {
 	
 	//update date
 	//@RequestMapping(value = "{id}/update", method = RequestMethod.POST, produces = "application/json")	
-	@RequestMapping(value = "{id}/{name}/{status}/update", method = RequestMethod.POST, produces = "application/json")
+	//@RequestMapping(value = "{id}/{name}/{status}/update", method = RequestMethod.POST, produces = "application/json")
+	@RequestMapping(value = "initialValidationStatus/{id}/update", method = RequestMethod.POST, produces = "application/json")
 	@ApiOperation(value = "This API used to provide the vnf update", notes = "Returns success or failure SLA:500")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Successful get all the data"),
 			@ApiResponse(code = 400, message = "Invalid input provided"),
 			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
 
-		public Map<String,String> update(@PathVariable String id,@PathVariable String name,@PathVariable String status){
-		
+		//public Map<String,String> update(@PathVariable String id,@PathVariable String name,@PathVariable String status){
+	public Map<String,String> update(@PathVariable String id,@RequestBody ValidationStatusBody valStatusbody){
 		WorkFlowView workFlowView = new WorkFlowView();
 		WorkFlowViewObject workFlowViewObject = new WorkFlowViewObject();
-		workFlowViewObject.setStatus(status);
+		workFlowViewObject.setStatus(valStatusbody.getStatus());
 		Map<String,String> message = new HashMap<String,String>();
 		workFlowView=retriveID(id);
-		
-	
-			 switch (name) {
+			
+			 switch (valStatusbody.getPhase()) {
 	         case "upload":
 	        	 workFlowView.setUpload(workFlowViewObject);
 	             break;
@@ -347,6 +350,26 @@ public class VNFController {
 		return object;	
 	}
 	
+	//Upload File 
+	@RequestMapping(value = "/UploadFile", method = RequestMethod.POST, produces = "application/json")	
+	@ApiOperation(value = "This API is used to Upload a given File", notes = "Returns success or failure SLA:500")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "Successful get all the data"),
+			@ApiResponse(code = 400, message = "Invalid input provided"),
+			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
+	public Map<String,String> UploadFile(@RequestPart MultipartFile uploadFile){	
+		Map<String,String> message = new HashMap<String,String>();
+		try {
+			String response = util.uploadFile(util.convert(uploadFile));
+			message.put("type", "sucess");
+			message.put("message", "sucessfully uploaded");
+			message.put("id", response);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return message;		
+	}
 	
 	
 }

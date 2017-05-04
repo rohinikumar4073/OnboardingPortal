@@ -568,6 +568,41 @@ public class Util {
 			e.printStackTrace();
 		}
 	}
+		//UPload a File
+		
+	public static String uploadFile(File f){
+		String responseString = "";
+		try {
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+			
+			HttpPost uploadFile = new HttpPost("http://localhost:8090/vnfs/packages/upload");
+			
+			MultipartEntityBuilder builder = MultipartEntityBuilder.create();			
+			System.out.println("uploading:::::::::::::: "+f);
+			System.out.println("getName::::::::::::: "+f.getName());
+			System.out.println("getAbsolutePath::::::::::::: "+f.getAbsolutePath());
+					
+			builder.addBinaryBody("file", new FileInputStream(f), ContentType.MULTIPART_FORM_DATA, f.getName());
+
+			HttpEntity multipart = builder.build();
+			
+			uploadFile.setEntity(multipart);
+			uploadFile.setHeader("Oss-Registration-Id","78bab0f0-4411-3d1a-a0f2-073a03b96f41" );
+			
+			CloseableHttpResponse response = httpClient.execute(uploadFile);
+			HttpEntity responseEntity = response.getEntity();
+			responseString = EntityUtils.toString(responseEntity);		
+	
+			
+			System.out.println("uploading status is  "+responseString);
+		}catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return responseString;
+	}
 	
 	
 
