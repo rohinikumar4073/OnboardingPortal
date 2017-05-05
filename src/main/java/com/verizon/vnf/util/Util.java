@@ -9,7 +9,9 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -18,15 +20,21 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.simple.JSONArray;
@@ -572,24 +580,33 @@ public class Util {
 		
 	public static String uploadFile(File f){
 		String responseString = "";
+		String uploadedFileLocation = "/home/invlab09/Downloads/" + f.getName();
 		try {
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 			
-			HttpPost uploadFile = new HttpPost("http://localhost:8090/vnfs/packages/upload");
+			HttpPost request = new HttpPost("http://localhost:8000/scp/uploadPackage");
 			
-			MultipartEntityBuilder builder = MultipartEntityBuilder.create();			
 			System.out.println("uploading:::::::::::::: "+f);
 			System.out.println("getName::::::::::::: "+f.getName());
 			System.out.println("getAbsolutePath::::::::::::: "+f.getAbsolutePath());
 					
-			builder.addBinaryBody("file", new FileInputStream(f), ContentType.MULTIPART_FORM_DATA, f.getName());
+			
 
-			HttpEntity multipart = builder.build();
+			// Request parameters and other properties.
 			
-			uploadFile.setEntity(multipart);
-			uploadFile.setHeader("Oss-Registration-Id","78bab0f0-4411-3d1a-a0f2-073a03b96f41" );
+			JSONObject json = new JSONObject();
 			
-			CloseableHttpResponse response = httpClient.execute(uploadFile);
+			json.put("host_ip", "10.76.110.121");  
+			json.put("username", "abhishek");
+			json.put("password", "password");
+			json.put("source_path", "/home/invlab09/Downloads/LPTHW.pdf");
+			json.put("destination_path", "/tmp/");
+			StringEntity params = new StringEntity(json.toString());
+		    request.addHeader("content-type", "application/json");
+		    request.setEntity(params);
+		    saveToFile(new FileInputStream(f),uploadedFileLocation);
+			
+			CloseableHttpResponse response = httpClient.execute(request);
 			HttpEntity responseEntity = response.getEntity();
 			responseString = EntityUtils.toString(responseEntity);		
 	
@@ -604,7 +621,21 @@ public class Util {
 		return responseString;
 	}
 	
-	
+	private static void saveToFile(InputStream inStream, String target)
+			throws IOException {
+		System.out.println("target::111:"+target);
+		OutputStream out = null;
+		int read = 0;
+		byte[] bytes = new byte[1024];
+		out = new FileOutputStream(new File(target));
+		while ((read = inStream.read(bytes)) != -1) {
+			out.write(bytes, 0, read);
+		}
+		System.out.println("target::222:"+target);
+		out.flush();
+		out.close();
+		
+	}
 
 
 }
