@@ -580,11 +580,11 @@ public class Util {
 		
 	public static String uploadFile(File f){
 		String responseString = "";
-		String uploadedFileLocation = "/home/invlab09/Downloads/" + f.getName();
+		String uploadedFileLocation = "/root/vnf_packages/" + f.getName();
 		try {
 			CloseableHttpClient httpClient = HttpClients.createDefault();
 			
-			HttpPost request = new HttpPost("http://localhost:8000/scp/uploadPackage");
+			HttpPost request = new HttpPost("http://localhost:8082/api/scp/uploadPackage");
 			
 			System.out.println("uploading:::::::::::::: "+f);
 			System.out.println("getName::::::::::::: "+f.getName());
@@ -596,11 +596,11 @@ public class Util {
 			
 			JSONObject json = new JSONObject();
 			
-			json.put("host_ip", "10.76.110.121");  
-			json.put("username", "abhishek");
-			json.put("password", "password");
-			json.put("source_path", "/home/invlab09/Downloads/LPTHW.pdf");
-			json.put("destination_path", "/tmp/");
+			json.put("host_ip", "10.75.14.22");  
+			json.put("username", "sftpuser");
+			json.put("password", "Verizon1");
+			json.put("source_path",uploadedFileLocation);
+			json.put("destination_path", "/home/sftpuser/VNF_Package_Repository");
 			StringEntity params = new StringEntity(json.toString());
 		    request.addHeader("content-type", "application/json");
 		    request.setEntity(params);

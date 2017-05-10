@@ -351,19 +351,24 @@ public class VNFController {
 	}
 	
 	//Upload File 
-	@RequestMapping(value = "/UploadFile", method = RequestMethod.POST, produces = "application/json")	
+	@RequestMapping(value = "{id}/UploadFile", method = RequestMethod.POST, produces = "application/json")	
 	@ApiOperation(value = "This API is used to Upload a given File", notes = "Returns success or failure SLA:500")
 	@ApiResponses(value = {
 			@ApiResponse(code = 200, message = "Successful get all the data"),
 			@ApiResponse(code = 400, message = "Invalid input provided"),
 			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
-	public Map<String,String> UploadFile(@RequestPart MultipartFile uploadFile){	
+	public Map<String,String> UploadFile(@RequestPart MultipartFile uploadFile,@PathVariable String id){	
 		Map<String,String> message = new HashMap<String,String>();
 		try {
 			String response = util.uploadFile(util.convert(uploadFile));
 			message.put("type", "sucess");
 			message.put("message", "sucessfully uploaded");
 			message.put("id", response);
+			ValidationStatusBody validation=new ValidationStatusBody();
+			validation.setPhase("upload");
+			validation.setStatus("completed");
+
+			update(id,validation);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Implementation-Title: vnf
 Implementation-Version: 0.0.1
-Built-By: invlab09
+Built-By: Innovhyd
 Implementation-Vendor-Id: vnf
-Build-Jdk: 1.8.0_131
+Build-Jdk: 1.8.0_111
 Implementation-URL: http://projects.spring.io/spring-boot/vnf/
 Created-By: Maven Integration for Eclipse
 Implementation-Vendor: Pivotal Software, Inc.
