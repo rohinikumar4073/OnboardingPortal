@@ -293,8 +293,6 @@ public class VNFController {
 			@ApiResponse(code = 200, message = "Successful get all the data"),
 			@ApiResponse(code = 400, message = "Invalid input provided"),
 			@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
-
-		//public Map<String,String> update(@PathVariable String id,@PathVariable String name,@PathVariable String status){
 	public Map<String,String> update(@PathVariable String id,@RequestBody ValidationStatusBody valStatusbody){
 		WorkFlowView workFlowView = new WorkFlowView();
 		WorkFlowViewObject workFlowViewObject = new WorkFlowViewObject();
@@ -364,17 +362,93 @@ public class VNFController {
 			message.put("type", "sucess");
 			message.put("message", "sucessfully uploaded");
 			message.put("id", response);
-			ValidationStatusBody validation=new ValidationStatusBody();
-			validation.setPhase("upload");
-			validation.setStatus("completed");
-
-			update(id,validation);
+			
+			WorkFlowView workFlowViewUpload = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectUpload = new WorkFlowViewObject();
+			workFlowViewObjectUpload.setStatus("completed");
+			workFlowViewUpload=retriveID(id);
+			workFlowViewUpload.setUpload(workFlowViewObjectUpload);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewUpload);
+			
+			//Trigger Jenkins job
+			util.triggerJenkinsValidation(id);
+			
+			/*Thread.sleep(15000);
+			
+			WorkFlowView workFlowViewPV = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectPV = new WorkFlowViewObject();
+			workFlowViewObjectPV.setStatus("completed");
+			workFlowViewPV=retriveID(id);
+			workFlowViewPV.setPackage_validation(workFlowViewObjectPV);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewPV);
+			
+			Thread.sleep(10000);
+			
+			WorkFlowView workFlowViewSecurity = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectSecurity = new WorkFlowViewObject();
+			workFlowViewObjectSecurity.setStatus("completed");
+			workFlowViewSecurity=retriveID(id);
+			workFlowViewSecurity.setSecurity(workFlowViewObjectSecurity);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewSecurity);
+			
+			Thread.sleep(12000);
+			
+			WorkFlowView workFlowViewInstantiation = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectInstantiation = new WorkFlowViewObject();
+			workFlowViewObjectInstantiation.setStatus("completed");
+			workFlowViewInstantiation=retriveID(id);
+			workFlowViewInstantiation.setInstantiation(workFlowViewObjectInstantiation);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewInstantiation);
+			
+			Thread.sleep(20000);
+			
+			WorkFlowView workFlowViewTU = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectTU = new WorkFlowViewObject();
+			workFlowViewObjectTU.setStatus("completed");
+			workFlowViewTU=retriveID(id);
+			workFlowViewTU.setTest_updates(workFlowViewObjectTU);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewTU);
+			
+			Thread.sleep(15000);
+			
+			WorkFlowView workFlowViewCert = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectCert = new WorkFlowViewObject();
+			workFlowViewObjectCert.setStatus("completed");
+			workFlowViewCert=retriveID(id);
+			workFlowViewCert.setCertification(workFlowViewObjectCert);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewCert);
+			
+			Thread.sleep(5000);
+			
+			WorkFlowView workFlowViewAVU = new WorkFlowView();
+			WorkFlowViewObject workFlowViewObjectAVU = new WorkFlowViewObject();
+			workFlowViewObjectAVU.setStatus("completed");
+			workFlowViewAVU=retriveID(id);
+			workFlowViewAVU.setArtifactory_version_update(workFlowViewObjectAVU);
+			repositoryImplClass.save(WORKFLOW, id, workFlowViewAVU);*/
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return message;		
 	}
+	
+	
+	//Test VNF
+		@RequestMapping(value = "{id}/testVnf", method = RequestMethod.POST, produces = "application/json")	
+		@ApiOperation(value = "This API is used to test a VNF", notes = "Returns success or failure SLA:500")
+		@ApiResponses(value = {
+				@ApiResponse(code = 200, message = "Successful get all the data"),
+				@ApiResponse(code = 400, message = "Invalid input provided"),
+				@ApiResponse(code = 404, message = "given Transaction ID does not exist"), })
+		public Map<String,String> TriggerJenkins(@PathVariable String id){	
+			Map<String,String> message = new HashMap<String,String>();
+			util.testVNF(id);
+			message.put("type", "sucess");
+			message.put("message", "sucessfully triggered");
+			return message;		
+		}
 	
 	
 }

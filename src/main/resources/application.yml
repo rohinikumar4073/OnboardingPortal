@@ -1,6 +1,10 @@
 
 spring:
  profiles.active: local
+ http:
+    multipart:
+      max-file-size: 10000MB
+      max-request-size: 10000MB
 app.name: vnf
 ---
 spring:

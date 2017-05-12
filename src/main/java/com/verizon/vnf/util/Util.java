@@ -16,25 +16,33 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystemException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemOptions;
+import org.apache.commons.vfs2.Selectors;
+import org.apache.commons.vfs2.impl.StandardFileSystemManager;
+import org.apache.commons.vfs2.provider.sftp.SftpFileSystemConfigBuilder;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.simple.JSONArray;
@@ -44,9 +52,10 @@ import org.json.simple.parser.ParseException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
-
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 
 @Service
 public class Util {
@@ -152,7 +161,7 @@ public class Util {
 		}
 	}
 	
-	public static void createVnfPackage(String filePath, String vnfName){
+	public void createVnfPackage(String filePath, String vnfName){
 		Process p;
 		try {
 			p = Runtime.getRuntime().exec("tar -cf "+vnfName+".tar "+"vnfd.json "+"Metadata.yaml "+"scripts/", null, new File(filePath));
@@ -191,7 +200,7 @@ public class Util {
 		return vnfName;
 	}
 	
-	public static String uploadVnfdPackage(File f, String vnfName){
+	public String uploadVnfdPackage(File f, String vnfName){
 		String responseString = "";
 		try {
 			CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -207,32 +216,11 @@ public class Util {
 			HttpEntity multipart = builder.build();
 			
 			uploadFile.setEntity(multipart);
-//			uploadFile.setHeader("Accept-Encoding", "gzip, deflate");
-//			uploadFile.setHeader("Accept-Language", "en-US,en;q=0.5");
-//			uploadFile.setHeader("Authorization", "Bearer "+Token.getToken());
-//			uploadFile.setHeader("project-id", Urls.projectid);
-			uploadFile.setHeader("Oss-Registration-Id","78bab0f0-4411-3d1a-a0f2-073a03b96f41" );
-			//HttpEntity httpEntity = new HttpEntity(uploadFile);
+			uploadFile.setHeader("Oss-Registration-Id",getOssRegistrationId());
 			
 			CloseableHttpResponse response = httpClient.execute(uploadFile);
 			HttpEntity responseEntity = response.getEntity();
 			responseString = EntityUtils.toString(responseEntity);		
-			/*JSONParser parser = new JSONParser();
-			JSONArray ar;
-			try {
-				ar = (JSONArray) parser.parse(responseString.toString());
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			Iterator<JSONObject> obj = ar.iterator();
-			while(obj.hasNext()){
-				JSONObject tempObj = obj.next();
-				if(tempObj.get("name").toString().equals("DNS-Info-Blox")){															
-					System.out.println(tempObj.get("name"));
-					vnfPackageId = tempObj.get("id").toString();
-				}
-			}*/
 			
 			System.out.println("uploading status is  "+responseString);
 		}catch (IOException e) {
@@ -578,43 +566,24 @@ public class Util {
 	}
 		//UPload a File
 		
-	public static String uploadFile(File f){
+	public String uploadFile(File f) throws IOException{
 		String responseString = "";
-		String uploadedFileLocation = "/root/vnf_packages/" + f.getName();
-		try {
-			CloseableHttpClient httpClient = HttpClients.createDefault();
-			
-			HttpPost request = new HttpPost("http://localhost:8082/api/scp/uploadPackage");
-			
-			System.out.println("uploading:::::::::::::: "+f);
-			System.out.println("getName::::::::::::: "+f.getName());
-			System.out.println("getAbsolutePath::::::::::::: "+f.getAbsolutePath());
-					
-			
 
-			// Request parameters and other properties.
-			
-			JSONObject json = new JSONObject();
-			
-			json.put("host_ip", "10.75.14.22");  
-			json.put("username", "sftpuser");
-			json.put("password", "Verizon1");
-			json.put("source_path",uploadedFileLocation);
-			json.put("destination_path", "/home/sftpuser/VNF_Package_Repository");
-			StringEntity params = new StringEntity(json.toString());
-		    request.addHeader("content-type", "application/json");
-		    request.setEntity(params);
-		    saveToFile(new FileInputStream(f),uploadedFileLocation);
-			
-			CloseableHttpResponse response = httpClient.execute(request);
-			HttpEntity responseEntity = response.getEntity();
-			responseString = EntityUtils.toString(responseEntity);		
-	
-			
-			System.out.println("uploading status is  "+responseString);
-		}catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
+		try {
+		//validate package structure
+		//ValidateZip(f.getAbsolutePath());
+		
+		//Upload file
+		System.out.println(f.getAbsolutePath());
+//		boolean filecopyStatus = upload("10.76.110.110", "invlab09", "sdnnfv@123", f.getAbsolutePath(), "/home/invlab09/testupload/"+f.getName());
+		boolean filecopyStatus = upload("10.75.14.22", "sftpuser", "Verizon1", f.getAbsolutePath(), "/home/sftpuser/VNF_Package_Repository/"+f.getName());
+		System.out.println("filecopyStatus : " + filecopyStatus);
+		
+//		boolean isFileExists = exist("10.76.110.110", "invlab09", "sdnnfv@123", "/home/invlab09/testupload/"+f.getName());
+		boolean isFileExists = exist("10.75.14.22", "sftpuser", "Verizon1", "/home/sftpuser/VNF_Package_Repository/"+f.getName());
+		System.out.println("isFileExists : " + isFileExists);
+		
+		}catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -637,5 +606,301 @@ public class Util {
 		
 	}
 
+	public boolean triggerJenkinsValidation(String vnfId){
+		boolean status = false;
+		try { 
+			String line;
+			String crumbVal ="";
+			Process process1 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", "curl --user ranjasu:Verizon1 http://jenkins-orch.vici.verizon.com:8080/crumbIssuer/api/xml?xpath=concat\\(//crumbRequestField,%22:%22,//crumb\\)"});
+			process1.waitFor();
+			Integer result = process1.exitValue();
+			System.out.println(result);
+			InputStream stderr = process1.getErrorStream ();
+			InputStream stdout = process1.getInputStream ();
 
+			BufferedReader reader = new BufferedReader (new InputStreamReader(stdout));
+			BufferedReader errorReader = new BufferedReader (new InputStreamReader(stderr));
+			crumbVal = reader.readLine();
+			System.out.println("CrumbValue: "+crumbVal);
+			while ((line = reader.readLine ()) != null) {
+				System.out.println ("Stdout: " + line);
+			}
+			while ((line = errorReader.readLine ()) != null) {
+				System.out.println ("Stderr: " + line);
+			}
+
+			Process process2 = Runtime.getRuntime().exec(new String[] {"/bin/sh", "-c", "curl X POST -H \""+crumbVal+"\""+" --user ranjasu:Verizon1 --header 'content-type:application/x-www-form-urlencoded' http://jenkins-orch.vici.verizon.com:8080/job/VNF_Onboarding_CICD_Pipeline/job/VNF_Package_Upload/build?token=xyz"});
+			//--data-urlencode json='{\"parameter\":[{\"vnfId\":\""+vnfId + "\"}]}'
+			//			System.out.println("curl X POST -H \""+crumbVal+"\""+" --user ranjasu:Verizon1 --header 'content-type:application/x-www-form-urlencoded' --data-urlencode json='{\"parameter\":[{\"vnfId\":\""+vnfId+ "\"}]}' http://jenkins-orch.vici.verizon.com:8080/job/VNF_Onboarding_CICD_Pipeline/job/VNF_Package_Upload/build?token=xyz");
+			process2.waitFor();
+			Integer result2 = process2.exitValue();
+			System.out.println(result2);
+			InputStream stderr2 = process2.getErrorStream ();
+			InputStream stdout2 = process2.getInputStream ();
+
+			BufferedReader reader2 = new BufferedReader (new InputStreamReader(stdout2));
+			BufferedReader errorReader2 = new BufferedReader (new InputStreamReader(stderr2));
+			crumbVal = reader2.readLine();
+			while ((line = reader2.readLine ()) != null) {
+				System.out.println ("Stdout: " + line);
+			}
+			while ((line = errorReader2.readLine ()) != null) {
+				System.out.println ("Stderr: " + line);
+			}
+			status = true;
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return status;
+	}
+	
+	
+	public void testVNF(String vnfId){
+		String host = "10.75.46.142";
+		String user = "root";
+		String password = "Verizon1";
+		java.util.Properties config = new java.util.Properties();
+		config.put("StrictHostKeyChecking", "no");
+		JSch jsch = new JSch();
+		Channel channel = null;
+
+		try {
+			Session session = jsch.getSession(user, host, 22);
+			session.setPassword(password);
+			session.setConfig(config);
+			session.connect();
+			System.out.println("Connecting Ssh ... Session is =  "+session.isConnected());
+			channel = session.openChannel("exec");
+			String cmd="/root/yardstick/trigger-test.sh";
+			System.out.println("Command to be executed = " + cmd);
+			((ChannelExec) channel).setCommand(cmd);
+			channel.connect();
+			channel.disconnect();
+			session.disconnect();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Exceptions = " +e.getMessage().toString());
+			System.out.println(e.getMessage().substring(1, 300).toString());
+		}
+	}
+	
+	
+	public void ValidateZip(String filePath) {
+		try {
+			ArrayList<String> set = new ArrayList<String>();
+			set.add("ziptest/");
+			//set.add("ziptest/test/test.txt");
+			//set.add("ziptest/test/");
+			set.add("alter_varchar_clob.sql");
+			set.add("runtime_config.sql");
+			String filename = "forZipTest";
+			byte[] buf = new byte[1024];
+			ZipInputStream zipinputstream = null;
+			ZipEntry zipentry;
+			zipinputstream = new ZipInputStream(new FileInputStream(filePath));
+			ArrayList<String> zipNames = new ArrayList<String>();
+			ArrayList<String> entryNames = new ArrayList<String>();
+//			entryNames.add("")
+			while ((zipentry = zipinputstream.getNextEntry()) != null) {
+				String entryName = zipentry.getName();
+				if (entryName.equals(filename + "/"))
+					continue;
+				entryNames.add(entryName);
+				String s0 = entryName.substring(entryName.indexOf("/") + 1);
+
+				if (s0.indexOf("/") > -1) {
+					s0 = s0.substring(0, s0.indexOf("/"));
+					if (!zipNames.contains(s0))
+						zipNames.add(s0);
+				}
+			}
+			System.out.println("zipNames:" + zipNames);
+			System.out.println("entryNames: " + entryNames);
+			if (!validate(filename, set, zipNames, entryNames))
+				System.out.println("Zip is bad");
+			else
+				System.out.println("Zip is good");
+			zipinputstream.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	public boolean validate(String filename, ArrayList<String> set, ArrayList<String> zipNames,
+			ArrayList<String> entryNames) {
+		boolean b = true;
+		for (String s : zipNames) {
+			for (String s1 : set) {
+				String s2 = s1.replaceAll("fileName", filename);
+				String s3 = s2.replaceAll("zipName", s);
+				System.out.println("s3: " + s3);
+				if (!entryNames.contains(s3)) {
+					System.out.println("file does not contain " + s3);
+					return false;
+				}
+				entryNames.remove(s3);
+			}
+		}
+		
+		if (entryNames.size() > 0) {
+			/*if (entryNames.size() != set.size()){
+				System.out.println("Size is different");
+				return false;
+			}*/
+			HashMap<String, String> map = new HashMap<String, String>();
+		    for (String str : set) {
+		        map.put(str, str);
+		    }
+		    for (String str : entryNames) {
+		        if ( ! map.containsKey(str) ) {
+		            return false;
+		        }
+		    }
+		}
+		return b;
+	}
+	
+	public static boolean upload(String hostName, String username, String password, String localFilePath,
+			String remoteFilePath) {
+		boolean isFileCopySuccessful = false;
+		File file = new File(localFilePath);
+		if (!file.exists())
+			throw new RuntimeException("Local file not found");
+
+		StandardFileSystemManager manager = new StandardFileSystemManager();
+
+		try {
+			manager.init();
+
+			FileObject localFile = manager.resolveFile(file.getAbsolutePath());
+			FileObject remoteFile = manager.resolveFile(getURIString(hostName, username, password, remoteFilePath), createDefaultOptions());
+
+			remoteFile.copyFrom(localFile, Selectors.SELECT_SELF);
+			isFileCopySuccessful = true;
+			System.out.println("File upload success");
+		} catch (Exception e) {
+			isFileCopySuccessful = false;
+			throw new RuntimeException(e);
+		} finally {
+			manager.close();
+		}
+		return isFileCopySuccessful;
+	}
+
+    public static boolean exist(String hostName, String username, String password, String remoteFilePath) {
+        StandardFileSystemManager manager = new StandardFileSystemManager();
+
+        try {
+            manager.init();
+            FileObject remoteFile = manager.resolveFile(getURIString(hostName, username, password, remoteFilePath), createDefaultOptions());
+            System.out.println("File exist: " + remoteFile.exists());
+            return remoteFile.exists();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            manager.close();
+        }
+    }
+    
+	public static String getURIString(String hostName, String username, String password,
+			String remoteFilePath) throws Exception {
+		URI uri = null;
+		try {
+			uri = new URI("sftp", username + ":" + password, hostName, -1, remoteFilePath, null, null);
+		} catch (URISyntaxException urise) {
+			System.out.println("Exception while constructing URI : " + urise.getMessage());
+			throw new Exception(urise);
+		}
+		return uri.toString();
+	}
+
+	public static FileSystemOptions createDefaultOptions() throws FileSystemException {
+		FileSystemOptions opts = new FileSystemOptions();
+		try {
+			SftpFileSystemConfigBuilder.getInstance().setStrictHostKeyChecking(opts, "no");
+		
+		SftpFileSystemConfigBuilder.getInstance().setUserDirIsRoot(opts, false);
+		// Timeout is count by Milliseconds
+		SftpFileSystemConfigBuilder.getInstance().setTimeout(opts, 300000);
+		} catch (org.apache.commons.vfs2.FileSystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return opts;
+	}
+
+	public String getOssRegistrationId(){
+		try {
+			URL url = new URL("http://10.75.14.133:8090/settings/nfvo");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("POST");
+			conn.setRequestProperty("Content-type", "application/json");
+			String input = "{ \"sOrchType\": \"HP\", \"sPassword\": \"Welcome@1234\", \"sTargetURL\": \"http://10.75.14.83:8080\", \"sUsername\": \"vdsi_onb_vnf_mgr@vdsi\" }";
+
+			OutputStream os = conn.getOutputStream();
+			os.write(input.getBytes());
+			os.flush();
+
+			if (conn.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn.getResponseCode());
+			}
+			BufferedReader br = new BufferedReader(new InputStreamReader(
+					(conn.getInputStream())));
+
+			String output = br.readLine();
+			JSONParser parser = new JSONParser();
+			JSONObject resultObject = (JSONObject)parser.parse(output);
+			System.out.println(resultObject.get("nfvoId"));
+			conn.disconnect();
+
+
+			URL url2 = new URL("http://10.75.14.133:8090/settings/applications");
+			HttpURLConnection conn2 = (HttpURLConnection) url2.openConnection();
+			conn2.setRequestMethod("POST");
+			conn2.setRequestProperty("Content-type", "application/json");
+			String input2 = "{\"appName\": \"MyOSS\", "
+					+ "\"domainId\": \"6ea7a82f-1f7c-42d7-abe4-2c6d92d94d30\", "
+					+ "\"modeInstanceId\": \"45698bbf-0419-4be4-acfe-4427c00054f7\","
+					+ "\"modeInstanceUndeployId\": \"7c10bed4-6aa0-47f2-a54c-00515a410b54\","
+					+ "\"nfvoId\": \""+resultObject.get("nfvoId")
+					+"\", \"orchType\": \"HP\", \"orgId\": \"b877eb45-c18d-46eb-8a79-d20c3204d23d\","
+					+ "\"resourceArtifactId\": \"c4ad5969-f921-3552-8c66-7828a6b5d306\","
+					+ "\"tenantId\": \"f8ff51d0-3bac-4dbb-998d-d7a155aaf384\","
+					+ "\"vnfGroupId\": \"43b5dfee-ec46-4101-aaa2-ca412f7ba056\" }";
+
+			OutputStream os2 = conn2.getOutputStream();
+			os2.write(input2.getBytes());
+			os2.flush();
+
+			if (conn2.getResponseCode() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : "
+						+ conn2.getResponseCode());
+			}
+			BufferedReader br2 = new BufferedReader(new InputStreamReader(
+					(conn2.getInputStream())));
+
+			String output2 = br2.readLine();
+			JSONObject resultObject2 = (JSONObject)parser.parse(output2);
+			System.out.println(resultObject2.get("ossRegistrationId"));
+
+			return resultObject2.get("ossRegistrationId").toString();
+
+		} catch (ProtocolException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+	
 }
